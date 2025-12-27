@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .caption {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 32px;
+            max-width: 800px;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .caption h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .caption p {
+            font-size: 16px;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .video-container {
+            max-width: 900px;
+            width: 100%;
+            background: #0a0a0a;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .caption h1 {
+                font-size: 24px;
+            }
+
+            .caption p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========================================
+         CAPTION - EDIT HERE
+         Palitan mo yung title at description
+         ======================================== -->
+    <div class="caption">
+        <h1>UTO² KA TANGA</h1>
+        <p>🤣🤣🤣🤣🤣🫵🏿🫵🏿</p>
+    </div>
+
+    <div class="video-container">
+        <!-- ========================================
+             VIDEO URL - EDIT HERE
+             
+             Paano mag-upload:
+             1. Upload video mo sa:
+                - Imgur.com (supports video)
+                - Streamable.com
+                - Google Drive (public, get direct link)
+                - Cloudinary.com
+             
+             2. Copy yung DIRECT video link
+             3. Paste dito sa src=""
+             
+             Example:
+             src="src="https://drive.google.com/uc?export=download&id=1tMZqivkay4j3_DZYsmNhxbKY01tT48g1"
+             ======================================== -->
+        <video 
+            id="videoPlayer" 
+            src="https://imgur.com/1rwnCgd.mp4"
+            controls
+            autoplay
+            muted
+        ></video>
+    </div>
+
+    <script>
+        const video = document.getElementById('videoPlayer');
+
+        // Auto-play with full volume
+        window.addEventListener('load', () => {
+            video.volume = 1.0; // Full volume
+            video.muted = false; // Unmute
+            
+            // Try to play
+            video.play().catch(err => {
+                console.log('Autoplay blocked by browser. Click video to play.');
+                // If autoplay blocked, user can click video to play
+            });
+        });
+
+        // Click video to unmute if needed
+        video.addEventListener('click', () => {
+            if (video.muted) {
+                video.muted = false;
+                video.volume = 1.0;
+            }
+        });
+    </script>
+</body>
+</html>
