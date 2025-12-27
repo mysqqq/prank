@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TUTORIAL HOW TO BURN ACCOUNT</title>
+    <title>TUTORIAL HOW TO MAKE BOT</title>
     <style>
         * {
             margin: 0;
@@ -22,15 +22,114 @@
             padding: 20px;
         }
 
+        /* Pop-up Overlay */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .popup-overlay.hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .popup-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 48px 40px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.5);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .popup-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .popup-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .popup-subtitle {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 32px;
+        }
+
+        .popup-button {
+            width: 100%;
+            padding: 16px;
+            background: #ffffff;
+            color: #667eea;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .popup-button:active {
+            transform: translateY(0);
+        }
+
+        /* Main Content */
+        .main-content {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .main-content.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         .caption {
             text-align: center;
             color: #ffffff;
             margin-bottom: 32px;
             max-width: 800px;
-            animation: fadeIn 0.6s ease;
+            animation: fadeInContent 0.6s ease;
         }
 
-        @keyframes fadeIn {
+        @keyframes fadeInContent {
             from {
                 opacity: 0;
                 transform: translateY(-20px);
@@ -64,10 +163,10 @@
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
-            animation: slideUp 0.6s ease;
+            animation: slideUpContent 0.6s ease;
         }
 
-        @keyframes slideUp {
+        @keyframes slideUpContent {
             from {
                 opacity: 0;
                 transform: translateY(30px);
@@ -85,6 +184,14 @@
         }
 
         @media (max-width: 768px) {
+            .popup-box {
+                padding: 36px 28px;
+            }
+
+            .popup-title {
+                font-size: 24px;
+            }
+
             .caption h1 {
                 font-size: 24px;
             }
@@ -96,78 +203,60 @@
     </style>
 </head>
 <body>
-    <!-- ========================================
-         CAPTION - EDIT HERE
-         Palitan mo yung title at description
-         ======================================== -->
-    <div class="caption">
-        <h1>UTO² SI TANGA</h1>
-        <p>🤣🤣🤣🤣🤣🫵🏿🫵🏿🫵🏿</p>
+    <!-- Pop-up Overlay -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-box">
+            <div class="popup-icon"></div>
+            <h2 class="popup-title">Continue to Tutorial?</h2>
+            <p class="popup-subtitle">Click below to start the video</p>
+            <button class="popup-button" id="continueBtn">
+                Continue →
+            </button>
+        </div>
     </div>
 
-    <div class="video-container">
-        <!-- ========================================
-             VIDEO URL - EDIT HERE
-             
-             Paano mag-upload:
-             1. Upload video mo sa:
-                - Imgur.com (supports video)
-                - Streamable.com
-                - Google Drive (public, get direct link)
-                - Cloudinary.com
-             
-             2. Copy yung DIRECT video link
-             3. Paste dito sa src=""
-             
-             Example:
-             src="https://i.imgur.com/yourfile.mp4"
-             ======================================== -->
-        <video 
-            id="videoPlayer" 
-            src="https://imgur.com/1rwnCgd.mp4"
-            controls
-            autoplay
-            muted
-        ></video>
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="caption">
+            <h1>UTO² SI TANGA</h1>
+            <p>🤣🤣🤣🤣🤣🫵🏿🫵🏿🫵🏿</p>
+        </div>
+
+        <div class="video-container">
+            <video 
+                id="videoPlayer" 
+                src="https://imgur.com/1rwnCgd.mp4"
+                controls
+                playsinline
+            ></video>
+        </div>
     </div>
 
     <script>
+        const popupOverlay = document.getElementById('popupOverlay');
+        const mainContent = document.getElementById('mainContent');
+        const continueBtn = document.getElementById('continueBtn');
         const video = document.getElementById('videoPlayer');
 
-        // Force play with full volume immediately
-        function forcePlay() {
+        // When user clicks "Continue"
+        continueBtn.addEventListener('click', () => {
+            // Hide popup
+            popupOverlay.classList.add('hidden');
+            
+            // Show content
+            mainContent.classList.add('visible');
+            
+            // Play video with full volume
             video.volume = 1.0;
             video.muted = false;
-            video.play().catch(() => {
-                // If blocked, try one more time after tiny delay
-                setTimeout(() => {
-                    video.volume = 1.0;
-                    video.muted = false;
-                    video.play();
-                }, 100);
-            });
-        }
+            video.play();
+        });
 
-        // Multiple trigger points
-        if (document.readyState === 'complete') {
-            forcePlay();
-        } else {
-            window.addEventListener('load', forcePlay);
-            document.addEventListener('DOMContentLoaded', forcePlay);
-        }
-
-        // Backup: any interaction triggers full volume play
-        const ensureSound = () => {
-            video.volume = 1.0;
-            video.muted = false;
-            if (video.paused) video.play();
-        };
-
-        document.addEventListener('click', ensureSound, { once: true });
-        document.addEventListener('touchstart', ensureSound, { once: true });
-        video.addEventListener('play', () => {
-            video.volume = 1.0;
-            video.muted = false;
+        // Also allow Enter key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !popupOverlay.classList.contains('hidden')) {
+                continueBtn.click();
+            }
         });
     </script>
 </body>
